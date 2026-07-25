@@ -189,7 +189,7 @@ export default function HealthSciHub() {
   const [formSubmitting, setFormSubmitting] = useState(false);
 
   // Google Apps Script Web App URL — replace with yours after deploying
-  const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyaTIjgphExl7ePlAnyj5syvq2pTFzAybTW2XIlxt8JuPhRVw20c9983AvPcPBnSWOiOg/exec";
+  const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbytU3cYTfki6rWNzVUXpKZqzQhUBMMYsNlmthAqQdtfZ9IEnsTmNHaxXmfxmK0B--ZH/exec";
 
   // --- GRADE CALCULATOR STATE ---
   const [grades, setGrades] = useState<GradeEntry[]>(
