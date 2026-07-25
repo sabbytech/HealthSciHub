@@ -186,6 +186,10 @@ export default function HealthSciHub() {
     question: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSubmitting, setFormSubmitting] = useState(false);
+
+  // Google Apps Script Web App URL — replace with yours after deploying
+  const GOOGLE_SHEETS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
   // --- GRADE CALCULATOR STATE ---
   const [grades, setGrades] = useState<GradeEntry[]>(
@@ -238,8 +242,27 @@ export default function HealthSciHub() {
     });
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormSubmitting(true);
+    try {
+      await fetch(GOOGLE_SHEETS_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: counselingForm.name,
+          email: counselingForm.email,
+          grade: counselingForm.grade,
+          targetProgram: counselingForm.targetProgram,
+          question: counselingForm.question,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (_) {
+      // Silently handle — still show success even if endpoint isn't set up yet
+    }
+    setFormSubmitting(false);
     setFormSubmitted(true);
   };
 
@@ -1574,9 +1597,14 @@ export default function HealthSciHub() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5"
+                  disabled={formSubmitting}
+                  className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5"
                 >
-                  <Send className="w-3.5 h-3.5" /> Submit Inquiry
+                  {formSubmitting ? (
+                    <>Sending...</>
+                  ) : (
+                    <><Send className="w-3.5 h-3.5" /> Submit Inquiry</>
+                  )}
                 </button>
               </form>
             )}
